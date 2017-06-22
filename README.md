@@ -1,6 +1,5 @@
-## Considerations and assumptions
+## Assumptions
 
-- Placement of stars and baubles is random. For simplicity no effort has been made to avoid clumping of decorations together.
 - C++14 has been assumed as the target language.
 
 ## Design notes
@@ -8,6 +7,7 @@
 - Trees have a width and a height which determines the average slope of the tree.
 - Branches have a shallower slope than the average slope of the tree.
 - The angle of the branch slope and the number of layers of tree determine the shape of the tree.
+- Placement of stars and baubles is random. For simplicity no effort has been made to avoid clumping of decorations together.
 
 ## Implementation notes
 
