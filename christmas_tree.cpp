@@ -2,6 +2,10 @@
 #include <iomanip>
 #include <random>
 
+/// Returns a std::string containing one layer of the tree including decoration.
+///
+/// \param width Width of the tree layer.
+/// \param rand_eng Random number engine.
 std::string tree_layer(unsigned int width, std::default_random_engine &rand_eng)
 {
     std::uniform_int_distribution<int> random(0, 10);
@@ -21,6 +25,14 @@ std::string tree_layer(unsigned int width, std::default_random_engine &rand_eng)
     return layer;
 }
 
+/// Draws an ascii christmas tree.
+///
+/// \param out The ostream object to output the ascii tree to
+/// \param rand_eng Random number engine.
+/// \param base_radius Radius of the tree at the widest base.
+/// \param height Height of the tree.
+/// \param branch_slope_ratio Ratio of branch slope to overall tree slope.
+/// \param layers Number of layers in the tree (i.e. branches)
 void draw_tree(
         std::ostream &out,
         std::default_random_engine &rand_eng,
