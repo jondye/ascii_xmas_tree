@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <random>
 #include <algorithm>
+#include <boost/program_options.hpp>
+
+namespace po = boost::program_options;
 
 /// Returns a std::string containing one layer of the tree including decoration.
 ///
@@ -73,13 +76,32 @@ void draw_tree(
     }
 }
 
-int main()
+int main(int argc, char * argv[])
 {
-    const auto base_radius = 10;
-    const auto height = 30;
-    const auto branch_slope_ratio = 5.0f;
-    const auto layers = 5;
-    const auto decoration = 20;
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("height", po::value<int>()->default_value(30), "height of the tree")
+        ("width", po::value<int>()->default_value(20), "width of the tree")
+        ("layers", po::value<int>()->default_value(5), "number of layers of branches")
+        ("slope", po::value<float>()->default_value(5.0f), "how slopey branches are (higher is more horizontal)")
+        ("decoration", po::value<int>()->default_value(20), "percent of tree that is decorated");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+        std::cout << desc << '\n';
+        return 1;
+    }
+
+    const auto base_radius = (vm["width"].as<int>() - 1) / 2;
+    const auto height = vm["height"].as<int>();
+    const auto layers = vm["layers"].as<int>();
+    const auto branch_slope_ratio = vm["slope"].as<float>();
+    const auto decoration = vm["decoration"].as<int>();
+
     std::random_device r;
     std::default_random_engine rand_eng(r());
 

@@ -24,3 +24,9 @@ The text to display is created in a buffer (std::string) before being written
 out. It is assumed that the compiler will optimise away all copies/moves of
 std::string, e.g. using Named Return Value (NRV) optimisation. Heap allocations
 will, however remain. Again, this approach was chosen for simplicity.
+
+Limiting the range of command line parameters has been left out for simplicity
+and time constraints. Either the values should be clamped to a suitable range
+or the command line parsing should reject values with a suitable warning. The
+solution will crash with unsuitable values.
+
