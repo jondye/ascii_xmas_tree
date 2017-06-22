@@ -1,14 +1,21 @@
 #include <iostream>
 #include <iomanip>
 #include <random>
+#include <algorithm>
 
 /// Returns a std::string containing one layer of the tree including decoration.
 ///
+/// \param decoration percentage of tree that has decoration (on averge).
 /// \param width Width of the tree layer.
 /// \param rand_eng Random number engine.
-std::string tree_layer(unsigned int width, std::default_random_engine &rand_eng)
+std::string tree_layer(
+        int decoration,
+        unsigned int width,
+        std::default_random_engine &rand_eng)
 {
-    std::uniform_int_distribution<int> random(0, 10);
+    decoration = std::max(1, std::min(100, decoration)); // Clamp value to range 1-100
+    const auto upper_bound = 200 / decoration - 1;
+    std::uniform_int_distribution<int> random(0, upper_bound);
     std::string layer(width, '*');
     for (auto & x : layer) {
         switch (random(rand_eng)) {
@@ -33,13 +40,15 @@ std::string tree_layer(unsigned int width, std::default_random_engine &rand_eng)
 /// \param height Height of the tree.
 /// \param branch_slope_ratio Ratio of branch slope to overall tree slope.
 /// \param layers Number of layers in the tree (i.e. branches)
+/// \param decoration Percentage of tree that has decoration (on averge).
 void draw_tree(
         std::ostream &out,
         std::default_random_engine &rand_eng,
         int base_radius,
         int height,
         float branch_slope_ratio,
-        int layers)
+        int layers,
+        int decoration)
 {
     const auto average_slope = float(base_radius)/height;
     const auto slope = average_slope * branch_slope_ratio;
@@ -54,7 +63,7 @@ void draw_tree(
         const auto space_width = cut_in + base_radius - int_radius;
 
         out << std::string(space_width, ' ')
-            << tree_layer(tree_width, rand_eng) << '\n';
+            << tree_layer(decoration, tree_width, rand_eng) << '\n';
 
         radius += slope;
         if (layer > branch_end) {
@@ -70,9 +79,10 @@ int main()
     const auto height = 30;
     const auto branch_slope_ratio = 5.0f;
     const auto layers = 5;
+    const auto decoration = 20;
     std::random_device r;
     std::default_random_engine rand_eng(r());
 
-    draw_tree(std::cout, rand_eng, base_radius, height, branch_slope_ratio, layers);
+    draw_tree(std::cout, rand_eng, base_radius, height, branch_slope_ratio, layers, decoration);
     return 0;
 }
